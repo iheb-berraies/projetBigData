@@ -20,25 +20,26 @@ Before you begin, ensure that you have the following software installed on your 
 
    ```bash
    git clone https://github.com/iheb-berraies/projetBigData
-   cd kubernetes-the-hard-way
+   
    
 
 2. *Launch the Vagrant environment:*
 
    
    cd kubernetes-the-hard-way
+   
    vagrant up
    
 
    This command sets up the virtual machines required for the Kubernetes cluster.
 
-3. **Access the deploy-kube-features directory:**
+4. **Access the deploy-kube-features directory:**
 
    
    cd deploy-kube-features
    
 
-4. *Run the Ansible playbook to deploy Kubernetes features:*
+5. *Run the Ansible playbook to deploy Kubernetes features:*
 
    
    ansible-playbook -i inventories/DEV/host.ini playbook.yaml --ask-vault-password
