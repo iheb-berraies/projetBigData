@@ -1,0 +1,12 @@
+- name: Build and Deploy Playbook
+  hosts: localhost
+  gather_facts: false
+  vars_files:
+    - vault.yml
+
+  roles:
+     - config
+#     - build
+     - deploy
+
+

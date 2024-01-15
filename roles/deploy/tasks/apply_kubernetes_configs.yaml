@@ -1,0 +1,93 @@
+# apply_kubernetes_configs.yaml
+
+- name: Apply ElasticSearch Deployment
+  command: kubectl apply -f "roles/deploy/tasks/ElasticSearch/Deployment.yaml" --kubeconfig={{ kubeconfig_path }}/config
+  args:
+    chdir: "{{ playbook_dir }}"
+
+- name: Apply ElasticSearch Service
+  command: kubectl apply -f "roles/deploy/tasks/ElasticSearch/Service.yaml" --kubeconfig={{ kubeconfig_path }}/config
+  args:
+    chdir: "{{ playbook_dir }}"
+
+- name: Apply Flask PersistentVolume
+  command: kubectl apply -f "roles/deploy/tasks/Flask/PersistentVolume.yaml" --kubeconfig={{ kubeconfig_path }}/config
+  args:
+    chdir: "{{ playbook_dir }}"
+
+- name: Apply Flask PersistentVolumeClaim
+  command: kubectl apply -f "roles/deploy/tasks/Flask/PersistentVolumeClaim.yaml" --kubeconfig={{ kubeconfig_path }}/config
+  args:
+    chdir: "{{ playbook_dir }}"
+
+- name: Apply Flask Deployment
+  command: kubectl apply -f "roles/deploy/tasks/Flask/Deployment.yaml" --kubeconfig={{ kubeconfig_path }}/config
+  args:
+    chdir: "{{ playbook_dir }}"
+
+- name: Apply Flask Service
+  command: kubectl apply -f "roles/deploy/tasks/Flask/Service.yaml" --kubeconfig={{ kubeconfig_path }}/config
+  args:
+    chdir: "{{ playbook_dir }}"
+  
+# ...
+
+- name: Get Flask Pod Name
+  command: kubectl get pods -l app=flask -o jsonpath="{.items[0].metadata.name}" --kubeconfig={{ kubeconfig_path }}/config
+  register: flask_pod_name
+
+# ...
+
+# ...
+
+- name: Port Forward Flask Pod to localhost:5000
+  shell: "kubectl port-forward pod/{{ flask_pod_name.stdout }} 5000:5000 --kubeconfig={{ kubeconfig_path }}/config"
+  async: 9999
+  poll: 0
+  become: false
+  ignore_errors: yes
+  register: port_forward_command
+
+# ...
+
+
+# ...
+
+- name: Make start-ngrok.sh executable
+  command: chmod u+x roles/deploy/tasks/start-ngrok.sh
+  args:
+    chdir: "{{ playbook_dir }}"
+
+
+
+
+- name: Run local script start-ngrok.sh with parameter 5000
+  shell: "sh roles/deploy/tasks/start-ngrok.sh 5000 ngrok_output.txt > /dev/null 2>&1 &"
+  args:
+    chdir: "{{ playbook_dir }}"
+  delegate_to: localhost
+  
+- name: Refresh ngrok output file
+  command: cat ngrok_output.txt
+  args:
+    chdir: "{{ playbook_dir }}"
+  register: ngrok_output_refreshed
+  changed_when: "'Forwarding' in ngrok_output_refreshed.stdout_lines | join(' ')"
+  retries: 5
+  delay: 5
+  until: "'Forwarding' in ngrok_output_refreshed.stdout_lines | join(' ')"
+
+- name: Display ngrok output file content
+  debug:
+    var: ngrok_output_refreshed.stdout_lines
+  when: "'Forwarding' in ngrok_output_refreshed.stdout_lines | join(' ')"
+
+
+
+
+
+
+
+
+
+

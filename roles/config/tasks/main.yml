@@ -1,0 +1,19 @@
+- name: Install kubeconfig
+  template:
+    src: kubeconfig.j2
+    dest: "{{ kubeconfig_path }}/config"
+
+- name: Export kubeconfig in .bashrc
+  ansible.builtin.shell: echo 'export KUBECONFIG="{{ kubeconfig_path }}/config"' >> ~/.bashrc
+
+- name: Source .bashrc
+  ansible.builtin.command: bash -l -c 'source ~/.bashrc'
+
+- name: Retrieve cluster info
+  command: bash -c 'kubectl cluster-info --kubeconfig={{ kubeconfig_path }}/config'
+  register: cluster_info_output
+
+- name: Display cluster info
+  debug:
+    var: cluster_info_output.stdout
+

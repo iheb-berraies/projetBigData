@@ -1,0 +1,27 @@
+---
+back: 
+  helm:
+    name: backend-release
+    url: /tmp/helms/kube-rm-java
+  pod: 
+    name: bureau-back
+  service:
+    name: bureau-back
+    container_port: 8090
+    port: 8090
+front: 
+  helm:
+    name: frontend-release
+    url: /tmp/helms/kube-rm-ui
+  pod: 
+    name: bureau-front
+  service:
+    name: bureau-front
+    container_port: 3000
+    port: 3000
+ingress:
+  url: /home/slim/Bureau/my-web-app/ingress.yaml
+Helm_git_url: https://{{ git.username }}:{{ git.password }}@gitlab.com/ajammali/deploy-kube.git
+Helm:
+  url: /tmp/helms
+

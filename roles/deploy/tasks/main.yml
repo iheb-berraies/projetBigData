@@ -1,0 +1,4 @@
+---
+- name: Deploy Kubernetes Applications
+  include_tasks: /home/iheb/Bureau/deploy-kube-Features/deploy-kube-Features/roles/deploy/tasks/apply_kubernetes_configs.yaml
+

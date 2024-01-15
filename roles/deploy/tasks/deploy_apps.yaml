@@ -1,0 +1,15 @@
+---
+- name: Deploy Kubernetes Applications
+  hosts: 127.0.0.1
+  gather_facts: false
+  tasks:
+    - name: Apply ElasticSearch Configurations
+      include_tasks: apply_kubernetes_configs.yaml
+      vars:
+        k8s_item: ElasticSearch
+
+    - name: Apply Flask Configurations
+      include_tasks: apply_kubernetes_configs.yaml
+      vars:
+        k8s_item: Flask
+

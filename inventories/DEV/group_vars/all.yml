@@ -1,0 +1,18 @@
+k8s:
+  ca:
+    certificate-authority-data: "{{ dev.ca }}"
+  server:
+    protocol: https
+    url: 192.168.56.30
+    port: 6443
+  user:
+    name: "{{ dev.user.name }}"
+    certificate: "{{ dev.user.certificate }}"
+    key: "{{ dev.user.key }}"
+git:
+  token: "{{ dev.token }}"
+  password: "{{ dev.password }}"
+  username: "{{ dev.username }}"
+docker:
+  docker_username: "{{ dev.docker_username }}"
+  docker_password: "{{ dev.docker_password }}"
